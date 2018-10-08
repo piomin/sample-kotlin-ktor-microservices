@@ -18,6 +18,7 @@ import org.slf4j.event.Level
 import pl.piomin.services.feature.ConsulFeature
 import pl.piomin.services.model.Customer
 import pl.piomin.services.repository.CustomerRepository
+import io.ktor.client.features.json.*
 
 fun Application.main() {
 
@@ -26,6 +27,7 @@ fun Application.main() {
         install(ConsulFeature) {
             consulUrl = "http://192.168.99.100:8500"
         }
+        install(JsonFeature)
     }
 
     install(ContentNegotiation) {
