@@ -1,6 +1,8 @@
 package pl.piomin.services
 
 import com.codahale.metrics.Slf4jReporter
+import com.orbitz.consul.Consul
+import com.orbitz.consul.model.agent.ImmutableRegistration
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -22,6 +24,14 @@ import pl.piomin.services.repository.AccountRepository
 import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
+    val consulClient = Consul.builder().withUrl("http://192.168.99.100:8500").build()
+    val service = ImmutableRegistration.builder()
+            .id("account-1")
+            .name("account-service")
+            .address("localhost")
+            .port(8090)
+            .build()
+    consulClient.agentClient().register(service)
     embeddedServer(Netty, port = 8090, module = Application::module).start(wait = true)
 }
 
@@ -49,12 +59,12 @@ fun Application.module() {
         get("/accounts/{id}") {
             val id: String? = call.parameters["id"]
             if (id != null)
-                call.respond(message = repository.accounts.filter { it -> it.id == id.toInt() })
+                call.respond(message = repository.accounts.filter { it.id == id.toInt() })
         }
         get("/accounts/customer/{customerId}") {
             val customerId: String? = call.parameters["customerId"]
             if (customerId != null)
-                call.respond(message = repository.accounts.filter { it -> it.customerId == customerId.toInt() })
+                call.respond(message = repository.accounts.filter { it.customerId == customerId.toInt() })
         }
         post("/accounts") {
             var account: Account = call.receive()
