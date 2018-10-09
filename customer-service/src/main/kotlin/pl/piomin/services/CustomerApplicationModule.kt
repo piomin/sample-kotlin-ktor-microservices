@@ -1,5 +1,7 @@
 package pl.piomin.services
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -27,7 +29,9 @@ fun Application.main() {
         install(ConsulFeature) {
             consulUrl = "http://192.168.99.100:8500"
         }
-        install(JsonFeature)
+        install(JsonFeature) {
+            serializer = JacksonSerializer()
+        }
     }
 
     install(ContentNegotiation) {
@@ -53,8 +57,9 @@ fun Application.main() {
             if (id != null) {
                 val accounts = client.get<Accounts>("http://account-service/accounts/customer/$id")
                 val customer = repository.customers.filter { it.id == id.toInt() }.last()
-                customer.accounts.addAll(accounts)
-                call.respond(message = customer)
+                val customerRet = customer.copy(id = customer.id, name = customer.name)
+                customerRet.accounts.addAll(accounts)
+                call.respond(message = customerRet)
             }
         }
         post("/customers") {
