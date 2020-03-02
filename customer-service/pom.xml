@@ -4,23 +4,23 @@
     <parent>
         <artifactId>sample-kotlin-ktor-microservices</artifactId>
         <groupId>pl.piomin.services</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.piomin.services</groupId>
     <artifactId>customer-service</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
-    <name>pl.piomin.services customer-service</name>
+    <name>customer-service</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.2.71</kotlin.version>
+        <kotlin.version>1.3.61</kotlin.version>
         <junit.version>4.12</junit.version>
-        <ktor.version>0.9.5</ktor.version>
+        <ktor.version>1.3.1</ktor.version>
     </properties>
 
     <dependencies>
@@ -52,7 +52,7 @@
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-metrics</artifactId>
+            <artifactId>ktor-metrics-micrometer</artifactId>
             <version>${ktor.version}</version>
         </dependency>
         <dependency>

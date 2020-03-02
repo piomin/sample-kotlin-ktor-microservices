@@ -1,22 +1,27 @@
 package pl.piomin.services
 
-import com.codahale.metrics.Slf4jReporter
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.*
 import io.ktor.jackson.jackson
-import io.ktor.metrics.Metrics
+import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
+import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.slf4j.event.Level
 import pl.piomin.services.model.Account
 import pl.piomin.services.repository.AccountRepository
-import java.util.concurrent.TimeUnit
 
 fun Application.main() {
     val repository = AccountRepository()
@@ -25,8 +30,16 @@ fun Application.main() {
         jackson {
         }
     }
-    install(Metrics) {
-        Slf4jReporter.forRegistry(registry).outputTo(log).build().start(10, TimeUnit.SECONDS)
+    install(MicrometerMetrics) {
+        registry = SimpleMeterRegistry()
+        meterBinders = listOf(
+                ClassLoaderMetrics(),
+                JvmMemoryMetrics(),
+                JvmGcMetrics(),
+                ProcessorMetrics(),
+                JvmThreadMetrics(),
+                FileDescriptorMetrics()
+        )
     }
     install(CallLogging) {
         level = Level.TRACE

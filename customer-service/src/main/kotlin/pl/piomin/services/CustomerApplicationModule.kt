@@ -1,26 +1,33 @@
 package pl.piomin.services
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.DeserializationFeature
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.features.json.JacksonSerializer
+import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import io.ktor.features.*
 import io.ktor.jackson.jackson
+import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
+import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.slf4j.event.Level
 import pl.piomin.services.feature.ConsulFeature
 import pl.piomin.services.model.Customer
 import pl.piomin.services.repository.CustomerRepository
-import io.ktor.client.features.json.*
 
 fun Application.main() {
 
@@ -38,9 +45,17 @@ fun Application.main() {
         jackson {
         }
     }
-//    install(Metrics) {
-//        Slf4jReporter.forRegistry(registry).outputTo(log).build().start(10, TimeUnit.SECONDS)
-//    }
+    install(MicrometerMetrics) {
+        registry = SimpleMeterRegistry()
+        meterBinders = listOf(
+                ClassLoaderMetrics(),
+                JvmMemoryMetrics(),
+                JvmGcMetrics(),
+                ProcessorMetrics(),
+                JvmThreadMetrics(),
+                FileDescriptorMetrics()
+        )
+    }
     install(CallLogging) {
         level = Level.TRACE
         callIdMdc("X-Request-ID")

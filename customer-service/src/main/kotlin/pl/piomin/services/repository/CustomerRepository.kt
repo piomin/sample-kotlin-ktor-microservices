@@ -4,7 +4,7 @@ import pl.piomin.services.model.Customer
 
 class CustomerRepository {
 
-    val customers: MutableList<Customer>  = ArrayList()
+    val customers: MutableList<Customer> = ArrayList()
 
     fun addCustomer(customer: Customer) {
         customers.add(customer)
