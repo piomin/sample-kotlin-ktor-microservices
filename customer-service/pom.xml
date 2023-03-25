@@ -15,6 +15,10 @@
 
     <name>customer-service</name>
 
+    <properties>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
