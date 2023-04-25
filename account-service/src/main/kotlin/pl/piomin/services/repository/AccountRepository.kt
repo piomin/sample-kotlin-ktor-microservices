@@ -4,10 +4,15 @@ import pl.piomin.services.model.Account
 
 class AccountRepository {
 
-    val accounts: MutableList<Account> = ArrayList()
+    companion object {
+        private val accounts: MutableList<Account> = ArrayList()
 
-    fun addAccount(account: Account) {
-        accounts.add(account)
+        fun addAccount(account: Account) {
+            accounts.add(account)
+        }
+
+        fun getAccounts() = accounts
+
     }
 
 }

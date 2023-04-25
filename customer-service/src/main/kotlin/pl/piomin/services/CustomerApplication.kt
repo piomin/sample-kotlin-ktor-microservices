@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
 
     val server = embeddedServer(Netty, commandLineEnvironment(args))
 
-    val consulClient = Consul.builder().withUrl("http://192.168.99.100:8500").build()
+    val consulClient = Consul.builder().withUrl("http://localhost:8500").build()
     val service = ImmutableRegistration.builder()
             .id("customer-${server.environment.connectors[0].port}")
             .name("customer-service")

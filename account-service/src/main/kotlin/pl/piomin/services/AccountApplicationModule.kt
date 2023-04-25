@@ -24,7 +24,6 @@ import pl.piomin.services.model.Account
 import pl.piomin.services.repository.AccountRepository
 
 fun Application.main() {
-    val repository = AccountRepository()
 
     install(ContentNegotiation) {
         jackson {
@@ -50,22 +49,25 @@ fun Application.main() {
     }
     routing {
         get("/accounts") {
-            call.respond(message = repository.accounts)
+            call.respond(message = AccountRepository.getAccounts())
         }
         get("/accounts/{id}") {
             val id: String? = call.parameters["id"]
             if (id != null)
-                call.respond(message = repository.accounts.filter { it.id == id.toInt() })
+                call.respond(message = AccountRepository.getAccounts()
+                    .first { it.id == id.toInt() })
+
         }
         get("/accounts/customer/{customerId}") {
             val customerId: String? = call.parameters["customerId"]
             if (customerId != null)
-                call.respond(message = repository.accounts.filter { it.customerId == customerId.toInt() })
+                call.respond(message = AccountRepository.getAccounts()
+                    .filter { it.customerId == customerId.toInt() })
         }
         post("/accounts") {
             var account: Account = call.receive()
-            account.id = repository.accounts.size + 1
-            repository.addAccount(account)
+            account.id = AccountRepository.getAccounts().size + 1
+            AccountRepository.addAccount(account)
             log.info("$account")
             call.respond(message = account)
         }

@@ -31,7 +31,6 @@ import pl.piomin.services.repository.CustomerRepository
 
 fun Application.main() {
 
-    val repository = CustomerRepository()
     val client = HttpClient(Apache) {
         install(ConsulFeature) {
             consulUrl = "http://192.168.99.100:8500"
@@ -65,13 +64,13 @@ fun Application.main() {
     }
     routing {
         get("/customers") {
-            call.respond(message = repository.customers)
+            call.respond(message = CustomerRepository.getCustomers())
         }
         get("/customers/{id}") {
             val id: String? = call.parameters["id"]
             if (id != null) {
                 val accounts = client.get<Accounts>("http://account-service/accounts/customer/$id")
-                val customer = repository.customers.filter { it.id == id.toInt() }.last()
+                val customer = CustomerRepository.getCustomers().first { it.id == id.toInt() }
                 val customerRet = customer.copy(id = customer.id, name = customer.name)
                 customerRet.accounts.addAll(accounts)
                 call.respond(message = customerRet)
@@ -79,8 +78,8 @@ fun Application.main() {
         }
         post("/customers") {
             val customer: Customer = call.receive()
-            customer.id = repository.customers.size + 1
-            repository.addCustomer(customer)
+            customer.id = CustomerRepository.getCustomers().size + 1
+            CustomerRepository.addCustomer(customer)
             log.info("$customer")
             call.respond(message = customer)
         }
