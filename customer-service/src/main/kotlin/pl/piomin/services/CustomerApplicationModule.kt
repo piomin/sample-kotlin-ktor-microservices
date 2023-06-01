@@ -1,22 +1,21 @@
 package pl.piomin.services
 
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.application.log
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JacksonSerializer
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.get
-import io.ktor.features.*
-import io.ktor.jackson.jackson
-import io.ktor.metrics.micrometer.MicrometerMetrics
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.plugins.jackson.*
+import io.ktor.client.plugins.json.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.metrics.micrometer.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
@@ -33,9 +32,9 @@ fun Application.main() {
 
     val client = HttpClient(Apache) {
         install(ConsulFeature) {
-            consulUrl = "http://192.168.99.100:8500"
+            consulUrl = "http://localhost:8500"
         }
-        install(JsonFeature) {
+        install(JsonPlugin) {
             serializer = JacksonSerializer()
         }
     }
@@ -69,10 +68,10 @@ fun Application.main() {
         get("/customers/{id}") {
             val id: String? = call.parameters["id"]
             if (id != null) {
-                val accounts = client.get<Accounts>("http://account-service/accounts/customer/$id")
+                val response: HttpResponse = client.get("http://account-service/accounts/customer/$id")
                 val customer = CustomerRepository.getCustomers().first { it.id == id.toInt() }
                 val customerRet = customer.copy(id = customer.id, name = customer.name)
-                customerRet.accounts.addAll(accounts)
+                customerRet.accounts.addAll(response.body())
                 call.respond(message = customerRet)
             }
         }
@@ -80,7 +79,7 @@ fun Application.main() {
             val customer: Customer = call.receive()
             customer.id = CustomerRepository.getCustomers().size + 1
             CustomerRepository.addCustomer(customer)
-            log.info("$customer")
+//            log.info("$customer")
             call.respond(message = customer)
         }
     }

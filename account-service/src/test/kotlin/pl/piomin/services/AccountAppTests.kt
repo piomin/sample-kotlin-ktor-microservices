@@ -1,7 +1,7 @@
 package pl.piomin.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.ktor.application.*
+import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import pl.piomin.services.model.Account

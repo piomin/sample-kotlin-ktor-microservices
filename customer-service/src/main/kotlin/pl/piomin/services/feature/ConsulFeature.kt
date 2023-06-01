@@ -2,7 +2,7 @@ package pl.piomin.services.feature
 
 import com.orbitz.consul.Consul
 import io.ktor.client.HttpClient
-import io.ktor.client.features.HttpClientFeature
+import io.ktor.client.plugins.*
 import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.util.AttributeKey
 
@@ -13,8 +13,8 @@ class ConsulFeature(var consulUrl: String) {
         fun build(): ConsulFeature = ConsulFeature(consulUrl)
     }
 
-    companion object Feature : HttpClientFeature<Config, ConsulFeature> {
-        var currentNodeIndex: Int = 0
+    companion object Feature : HttpClientPlugin<Config, ConsulFeature> {
+        private var currentNodeIndex: Int = 0
 
         override val key = AttributeKey<ConsulFeature>("ConsulFeature")
 
