@@ -27,71 +27,71 @@
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-core-jvm</artifactId>
+            <artifactId>ktor-server-core</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-netty-jvm</artifactId>
+            <artifactId>ktor-server-netty</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-content-negotiation-jvm</artifactId>
+            <artifactId>ktor-server-content-negotiation</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-call-logging-jvm</artifactId>
+            <artifactId>ktor-server-call-logging</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-call-id-jvm</artifactId>
+            <artifactId>ktor-server-call-id</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-serialization-jackson-jvm</artifactId>
+            <artifactId>ktor-serialization-jackson</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-metrics-micrometer-jvm</artifactId>
+            <artifactId>ktor-server-metrics-micrometer</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>com.orbitz.consul</groupId>
             <artifactId>consul-client</artifactId>
             <version>1.5.3</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.5.18</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>junit</groupId>-->
-<!--            <artifactId>junit</artifactId>-->
-<!--            <version>${junit.version}</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-        <dependency>
+            </dependency>
+            <!--        <dependency>-->
+            <!--            <groupId>junit</groupId>-->
+            <!--            <artifactId>junit</artifactId>-->
+            <!--            <version>${junit.version}</version>-->
+            <!--            <scope>test</scope>-->
+            <!--        </dependency>-->
+            <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-test-host-jvm</artifactId>
+            <artifactId>ktor-server-test-host</artifactId>
             <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
+            </dependency>
+            <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
-        </dependency>
+            </dependency>
     </dependencies>
 
     <build>

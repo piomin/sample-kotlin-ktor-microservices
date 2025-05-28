@@ -3,6 +3,8 @@ package pl.piomin.services
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.server.application.*
 import io.ktor.http.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.server.testing.*
 import pl.piomin.services.model.Customer
 import kotlin.test.Test
@@ -14,37 +16,39 @@ class CustomerAppTests {
     private val mapper: ObjectMapper = ObjectMapper()
 
     @Test
-    fun testAdd(): Unit = withTestApplication(Application::main) {
-        with(handleRequest(HttpMethod.Post, "/customers"){
-            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            setBody(mapper.writeValueAsString(Customer(1, "Test1")))
-        }) {
-            assertEquals(io.ktor.http.HttpStatusCode.OK, response.status())
-            assertNotNull("Empty response", response.content)
+    fun testAdd() = testApplication {
+        application {
+            main()
         }
+        val response = client.post("/customers") {
+            header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            setBody(mapper.writeValueAsString(Customer(1, "Test1")))
+        }
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertNotNull("Empty response", response.bodyAsText())
     }
 
     @Test
-    fun testFindAll() {
-        withTestApplication(Application::main) {
-            handleRequest(HttpMethod.Get, "/customers").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertNotNull("Empty response", response.content)
-            }
+    fun testFindAll() = testApplication {
+        application {
+            main()
         }
+        val response = client.get("/customers")
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertNotNull("Empty response", response.bodyAsText())
     }
 
-//    @Test
-    fun testFindById() {
-        withTestApplication(Application::main) {
-            handleRequest(HttpMethod.Get, "/customers/1").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertNotNull("Empty response", response.content)
-                val a = mapper.readValue(response.content, Customer::class.java)
-                assertNotNull(a.id)
-                assertEquals(1, a.id)
-            }
+    @Test
+    fun testFindById() = testApplication {
+        application {
+            main()
         }
+        val response = client.get("/customers/1")
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertNotNull("Empty response", response.bodyAsText())
+        val a = mapper.readValue(response.bodyAsText(), Customer::class.java)
+        assertNotNull(a.id)
+        assertEquals(1, a.id)
     }
 
 }
