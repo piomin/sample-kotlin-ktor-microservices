@@ -3,15 +3,13 @@ package pl.piomin.services
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.apache.*
-import io.ktor.client.plugins.jackson.*
-import io.ktor.client.plugins.json.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.plugins.callid.*
-import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -34,8 +32,8 @@ fun Application.main() {
         install(ConsulFeature) {
             consulUrl = "http://localhost:8500"
         }
-        install(JsonPlugin) {
-            serializer = JacksonSerializer()
+        install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
+            jackson()
         }
     }
 
