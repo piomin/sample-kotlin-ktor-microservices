@@ -16,6 +16,9 @@ class AccountAppTests {
 
     @Test
     fun testAdd() = testApplication {
+        application {
+            main()
+        }
         val response = client.post("/accounts") {
             contentType(ContentType.Application.Json)
             setBody(mapper.writeValueAsString(Account(1, 1000, "123456", 1)))
@@ -27,6 +30,9 @@ class AccountAppTests {
 
     @Test
     fun testFindAll() = testApplication {
+        application {
+            main()
+        }
         val response = client.get("/accounts")
         assertEquals(HttpStatusCode.OK, response.status)
         assertNotNull("Empty response", response.bodyAsText())
@@ -34,6 +40,17 @@ class AccountAppTests {
 
     @Test
     fun testFindById() = testApplication {
+        application {
+            main()
+        }
+        // First add an account
+        val addResponse = client.post("/accounts") {
+            contentType(ContentType.Application.Json)
+            setBody(mapper.writeValueAsString(Account(1, 1000, "123456", 1)))
+        }
+        assertEquals(HttpStatusCode.OK, addResponse.status)
+
+        // Then retrieve it
         val response = client.get("/accounts/1")
         assertEquals(HttpStatusCode.OK, response.status)
         assertNotNull("Empty response", response.bodyAsText())

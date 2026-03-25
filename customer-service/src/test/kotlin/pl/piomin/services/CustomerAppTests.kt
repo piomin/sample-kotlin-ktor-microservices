@@ -16,6 +16,9 @@ class CustomerAppTests {
 
     @Test
     fun testAdd() = testApplication {
+        application {
+            main()
+        }
         val response = client.post("/customers") {
             header(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             setBody(mapper.writeValueAsString(Customer(1, "Test1")))
@@ -26,6 +29,9 @@ class CustomerAppTests {
 
     @Test
     fun testFindAll() = testApplication {
+        application {
+            main()
+        }
         val response = client.get("/customers")
         assertEquals(HttpStatusCode.OK, response.status)
         assertNotNull("Empty response", response.bodyAsText())
