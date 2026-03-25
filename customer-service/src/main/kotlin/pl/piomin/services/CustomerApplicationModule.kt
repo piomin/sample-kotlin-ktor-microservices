@@ -2,7 +2,7 @@ package pl.piomin.services
 
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.apache5.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.serialization.jackson.*
@@ -28,7 +28,7 @@ import pl.piomin.services.repository.CustomerRepository
 
 fun Application.main() {
 
-    val client = HttpClient(Apache) {
+    val client = HttpClient(Apache5) {
         install(ConsulFeature) {
             consulUrl = "http://localhost:8500"
         }
